@@ -5,11 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const detailScreen = ({ route }: any) => {
   const navigation = useNavigation<any>();
-  const { username } = route.params;
   return (
     <View>
       <Text>detailScreen</Text>
-      <Text>{username}</Text>
+      <Text>hello</Text>
       <Button onPress={() => navigation.goBack()}>Go Back</Button>
     </View>
   );

@@ -8,11 +8,7 @@ const homeScreen = () => {
   return (
     <View>
       <Text>homeScreen</Text>
-      <Button
-        onPressIn={() =>
-          navigation.navigate("Detail", { username: "chaicode" })
-        }
-      >
+      <Button onPressIn={() => navigation.navigate("Detail")}>
         View Details
       </Button>
     </View>

@@ -7,9 +7,14 @@ import onBoardingScreen from "./src/screens/onBoardingScreen";
 import cart from "./src/screens/cart";
 
 const RootStack = createNativeStackNavigator({
-  initialRouteName: "Home",
+  initialRouteName: "Boarding",
   screens: {
-    Boarding: onBoardingScreen,
+    Boarding: {
+      screen: onBoardingScreen,
+      options: {
+        headerShown: false,
+      },
+    },
     Home: homeScreen,
     Detail: detailScreen,
     Cart: cart,
