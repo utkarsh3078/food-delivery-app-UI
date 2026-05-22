@@ -1,39 +1,93 @@
 import * as React from "react";
-import { createStaticNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import homeScreen from "./src/screens/homeScreen";
-import detailScreen from "./src/screens/detailScreen";
-import onBoardingScreen from "./src/screens/onBoardingScreen";
-import cart from "./src/screens/cart";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  NavigationContainer,
+  type LinkingOptions,
+} from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import { CartProvider } from "./src/context/CartContext";
+import AuthStackNavigator from "./src/navigators/stack/authStackNavigator";
+import DynamicStackNavigator from "./src/navigators/stack/dynamicStackNavigator";
+import type { AppStackParamList } from "./src/types/navigation";
 
-const RootStack = createNativeStackNavigator({
-  initialRouteName: "Boarding",
-
-  screens: {
-    Boarding: {
-      screen: onBoardingScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    Home: {
-      screen: homeScreen,
-      options: {
-        title: "My home",
-        headerStyle: {
-          backgroundColor: "#f4511e",
+const linking: LinkingOptions<AppStackParamList> = {
+  prefixes: ["foodapp://"],
+  config: {
+    screens: {
+      Onboarding: "onboarding",
+      MainTabs: {
+        screens: {
+          HomeTab: {
+            screens: {
+              Home: "home",
+              RestaurantDetail: "restaurant/:id",
+              Cart: "cart",
+            },
+          },
+          Search: "search",
+          Orders: "orders",
+          Profile: {
+            screens: {
+              ProfileHome: "profile",
+              MyOrders: "profile/orders",
+              Settings: "profile/settings",
+              Help: "profile/help",
+            },
+          },
         },
       },
     },
-    Detail: detailScreen,
-    Cart: cart,
   },
-});
+};
 
-const Navigation = createStaticNavigation(RootStack);
+const LoadingScreen = () => (
+  <View style={styles.loading}>
+    <ActivityIndicator color="#ff7a1a" size="large" />
+    <Text style={styles.loadingText}>Preparing your kitchen...</Text>
+  </View>
+);
+
+const AppNavigation = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <NavigationContainer linking={isAuthenticated ? linking : undefined}>
+      <StatusBar style="dark" />
+      {isAuthenticated ? (
+        <CartProvider>
+          <DynamicStackNavigator />
+        </CartProvider>
+      ) : (
+        <AuthStackNavigator />
+      )}
+    </NavigationContainer>
+  );
+};
 
 export default function App() {
-  return <Navigation />;
+  return (
+    <AuthProvider>
+      <AppNavigation />
+    </AuthProvider>
+  );
 }
+
+const styles = StyleSheet.create({
+  loading: {
+    alignItems: "center",
+    backgroundColor: "#fff8ec",
+    flex: 1,
+    justifyContent: "center",
+  },
+  loadingText: {
+    color: "#6f5c4a",
+    fontSize: 15,
+    fontWeight: "800",
+    marginTop: 12,
+  },
+});

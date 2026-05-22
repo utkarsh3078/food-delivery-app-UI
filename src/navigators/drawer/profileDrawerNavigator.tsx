@@ -37,9 +37,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     >
       <View style={styles.drawerHeader}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>SY</Text>
+          <Text style={styles.avatarText}>DU</Text>
         </View>
-        <Text style={styles.userName}>Sudhir Yadav</Text>
+        <Text style={styles.userName}>Demo User</Text>
         <Text style={styles.userEmail}>food lover</Text>
       </View>
 
@@ -69,11 +69,7 @@ const ProfileDrawerNavigator = () => {
         headerStyle: { backgroundColor: "#fff8ec" },
         headerTintColor: "#2a1d12",
         drawerIcon: ({ color, size }) => (
-          <Ionicons
-            name={iconForRoute(route.name)}
-            color={color}
-            size={size}
-          />
+          <Ionicons name={iconForRoute(route.name)} color={color} size={size} />
         ),
       })}
     >

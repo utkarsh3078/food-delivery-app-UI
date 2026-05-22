@@ -30,8 +30,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const [[, authValue], [, onboardingValue]] =
-          await AsyncStorage.multiGet([AUTH_KEY, ONBOARDING_KEY]);
+        const storedValues = await AsyncStorage.multiGet([
+          AUTH_KEY,
+          ONBOARDING_KEY,
+        ]);
+        const storedMap = Object.fromEntries(storedValues);
+        const authValue = storedMap[AUTH_KEY];
+        const onboardingValue = storedMap[ONBOARDING_KEY];
 
         setIsAuthenticated(authValue === "true");
         setHasSeenOnboarding(onboardingValue === "true");
